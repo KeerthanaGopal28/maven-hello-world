@@ -1,0 +1,50 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/KeerthanaGopal28/maven-hello-world.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn compile'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'mvn clean install'
+            }
+        }
+
+        stage('Package') {
+            steps {
+                sh 'mvn package'
+            }
+        }
+        stage('Run Application') {
+            steps {
+            // Start the JAR application
+                   sh 'java -jar target/MyMavenApp-1.0-SNAPSHOT.jar'
+             }
+        }
+     }
+     post {
+        success {
+            echo 'Build and deployment successful!'
+        }
+    
+        failure {
+            echo 'Build failed!'
+        }
+     }
+}
+
+
